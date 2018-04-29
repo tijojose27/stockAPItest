@@ -1,7 +1,11 @@
-package com.example.tijoj.stockapitest;
+package com.example.tijoj.stockapitest.POJO;
 
 /**
  * Created by tijoj on 4/25/2018.
+ *
+ *
+ * JAVA POJO FOR COMPANY INFO
+ *
  */
 
 public class Product {

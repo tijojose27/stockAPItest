@@ -16,7 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding{
+    dataBinding {
         enabled = true;
     }
 }
@@ -33,4 +33,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }

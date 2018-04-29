@@ -26,11 +26,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String stuff = editText.getText().toString();
-                if(!stuff.equals("")) {
-                    Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-                    intent.putExtra("TICKER", stuff);
+//                if(!stuff.equals("")) {
+//                    Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+//                    intent.putExtra("TICKER", stuff);
+//                    startActivity(intent);
+//                }
+
+                Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
                     startActivity(intent);
-                }
             }
         });
     }

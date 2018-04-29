@@ -1,6 +1,6 @@
 package com.example.tijoj.stockapitest.conversion;
 
-import com.example.tijoj.stockapitest.Product;
+import com.example.tijoj.stockapitest.POJO.Product;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

@@ -1,11 +1,16 @@
 package com.example.tijoj.stockapitest;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tijoj.stockapitest.POJO.Product;
 import com.example.tijoj.stockapitest.conversion.JsonToProduct;
 import com.squareup.picasso.Picasso;
 
@@ -20,6 +25,8 @@ public class DetailActivity extends AppCompatActivity {
 
     public TextView symbol, compName, indus, website, desc, ceo, sect;
     public ImageView logoImageView;
+    public Button button;
+    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +35,9 @@ public class DetailActivity extends AppCompatActivity {
 
         String base_url = "https://api.iextrading.com/1.0/stock/";
 
-        String comp = getIntent().getStringExtra("TICKER");
+//        String comp = getIntent().getStringExtra("TICKER");
+
+        String comp = "msft";
 
         String main_url = base_url+comp;
 
@@ -48,6 +57,17 @@ public class DetailActivity extends AppCompatActivity {
         getProducts(detail_url);
 
         getLogo(logo_url);
+
+        button = findViewById(R.id.bt_chart);
+
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ChartActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -108,7 +128,6 @@ public class DetailActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
                 final String finalPic_url = pic_url;
                 runOnUiThread(new Runnable() {
