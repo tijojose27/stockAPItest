@@ -11,13 +11,13 @@ import com.example.tijoj.stockapitest.Helpers.PojoConverters;
  *
  */
 
-public class StockEntry {
+public class StockData {
 
     public int order;
     public String date;
     public String close;
 
-    public StockEntry(int order, String date, String close) {
+    public StockData(int order, String date, String close) {
         this.date = date;
         this.close = close;
         this.order = order;

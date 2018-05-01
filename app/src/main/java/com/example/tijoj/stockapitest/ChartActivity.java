@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.tijoj.stockapitest.POJO.StockEntry;
+import com.example.tijoj.stockapitest.Helpers.PojoConverters;
+import com.example.tijoj.stockapitest.POJO.StockData;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -29,7 +31,7 @@ import okhttp3.OkHttpClient;
 
 public class ChartActivity extends AppCompatActivity {
 
-    public ArrayList<StockEntry> currStockEntry;
+    public ArrayList<StockData> currStockData;
     public String company = "MSFT";
 
     @Override
@@ -104,7 +106,7 @@ public class ChartActivity extends AppCompatActivity {
                     throws IOException {
                 final String result = response.body().string();  // 4
 
-                currStockEntry = new ArrayList<>();
+                currStockData = new ArrayList<>();
 
                 try {
                     JSONObject main = new JSONObject(result);
@@ -118,14 +120,14 @@ public class ChartActivity extends AppCompatActivity {
                         String date = key.toString();
                         JSONObject prices = time_series.getJSONObject(date);
                         String close = prices.getString("4. close");
-                        StockEntry stockEntry = new StockEntry(i, date, close);
+                        StockData stockData = new StockData(i, date, close);
 
-                        currStockEntry.add(stockEntry);
+                        currStockData.add(stockData);
 
                         i++;
                     }
 
-                    populateUI(currStockEntry);
+                    populateUI(currStockData);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -135,39 +137,35 @@ public class ChartActivity extends AppCompatActivity {
         });
     }
 
-    public void populateUI(ArrayList<StockEntry> currStockEntry){
+    public void populateUI(ArrayList<StockData> currStockData){
 
 
         LineChart lineChart = findViewById(R.id.chart);
 
         ArrayList<Entry> entries = new ArrayList<>();
 
-        for(StockEntry stockEntry : currStockEntry){
-            Log.i("STOCK", stockEntry.getDateAsFloat()+" : "+stockEntry.getCloseAsFloat());
+        for(StockData stockData : currStockData){
 
-            entries.add(new Entry(stockEntry.getOrder(), stockEntry.getCloseAsFloat()));
+            entries.add(new Entry(stockData.getOrder(), stockData.getCloseAsFloat()));
         }
         Collections.sort(entries, new EntryXComparator());
 
-        String[] months = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        String[] orderedMonths = PojoConverters.getMonthsFromData(currStockData);
+
+        for(String month : orderedMonths){
+            Log.i("MONTH", month);
+        }
+
 
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setValueFormatter(new XvalueFormatter(months));
-        xAxis.setGranularity(1);
+        xAxis.setLabelCount(12);
+        xAxis.setValueFormatter(new XvalueFormatter(orderedMonths));
 
+        YAxis axisRight = lineChart.getAxisRight();
+        axisRight.setEnabled(false);
 
-
-//        ArrayList<String> labels = new ArrayList<>();
-//        labels.add("MON");
-//        labels.add("TUE");
-//        labels.add("WED");
-//        labels.add("THU");
-//        labels.add("FRI");
-//        labels.add("SAT");
-//        labels.add("SUN");
-//
         LineDataSet lineDataSet = new LineDataSet(entries, company);
 //
         lineDataSet.setColor(Color.RED);
@@ -194,6 +192,8 @@ public class ChartActivity extends AppCompatActivity {
     public class XvalueFormatter implements IAxisValueFormatter{
 
         public String[] months;
+
+
 
         public XvalueFormatter(String[] months) {
             this.months = months;
